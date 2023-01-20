@@ -6,7 +6,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import {BsEyeFill,BsEyeSlashFill} from 'react-icons/bs'
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 function App() {
   const provider = new GoogleAuthProvider();
@@ -80,7 +80,9 @@ function App() {
     <div className="container">
       <form className="form-item" onSubmit={handleSubmit}>
         <input
+          whileHover={{ scale: 1.011 }}
           name="email"
+          className="input-form"
           placeholder="Enter email"
           type="email"
           value={formData.email}
@@ -89,7 +91,7 @@ function App() {
         <div className="password-input">
           <input
             name="password"
-            // className="password-input"
+            className="input-form"
             placeholder="Enter password"
             type={passwordVisible ? "text" : "password"}
             value={formData.password}
@@ -102,14 +104,18 @@ function App() {
             {passwordVisible ? <BsEyeSlashFill /> : <BsEyeFill />}
           </i>
         </div>
-        <button className="account-button" type="submit" disabled={isLoading}>
+        <button
+          className="account-button"
+          type="submit"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <div className="spinner">
               <div className="double-bounce1"></div>
               <div className="double-bounce2"></div>
             </div>
           ) : (
-            "Create Account"
+            "Sign Up"
           )}
         </button>
         <button
@@ -127,6 +133,11 @@ function App() {
           )}
         </button>
         {error && <p className="error">{error}</p>}
+        <p style={{ color: "#f7f7f7" }}>
+          {" "}
+          The email address is alopooøøssssasasssssssready in use by another
+          account.
+        </p>
       </form>
     </div>
   );
