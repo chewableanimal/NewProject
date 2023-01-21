@@ -141,3 +141,21 @@ body {
 .form-item {
   flex: 1 1 auto;
 }
+
+.password-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+.password-tooltip.valid {
+    color: green;
+}
+
+.password-tooltip.invalid {
+    color: red;
+}
