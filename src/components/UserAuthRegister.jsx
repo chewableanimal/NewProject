@@ -16,38 +16,34 @@ function UserSignUp() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [validPassword, setValidPassword] = useState(false);
-  const passwordRef = useRef(null);
-
-  function isValidPassword(password) {
-    const lowerCase = /[a-z]/;
-    const upperCase = /[A-Z]/;
-    const number = /[0-9]/;
-    const special = /[!@#\$%\^\&*\)\(+=._-]/;
-
-    if (password.length < 8) {
-      return false;
-    } else if (!password.match(lowerCase)) {
-      return false;
-    } else if (!password.match(upperCase)) {
-      return false;
-    } else if (!password.match(number)) {
-      return false;
-    } else if (!password.match(special)) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  const showPasswordRef = useRef(null);
 
   const togglePasswordVisibility = (e) => {
     e.preventDefault();
     setPasswordVisible(!passwordVisible);
   };
 
+  const checkPasswordRequirements = (password) => {
+    const requirements = [
+      /.{8,}/, // Minimum length of 8 characters
+      /[A-Z]/, // Contains an uppercase letter
+      /[a-z]/, // Contains a lowercase letter
+      /[0-9]/, // Contains a number
+      /[!@#\$%\^\&*\)\(+=._-]/, // Contains a special character
+    ];
+
+    return requirements.map((regex) => regex.test(password));
+  };
+
+  const isValidPassword = (password) => {
+    const metRequirements = checkPasswordRequirements(password);
+    return metRequirements.every((req) => req);
+  };
+
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(null);
-    if (isValidPassword(e.targe.value)) {
+    if (isValidPassword(e.target.value)) {
       setValidPassword(true);
     }
   };
@@ -72,6 +68,10 @@ function UserSignUp() {
       setError("Please enter your email and password");
       return;
     }
+    if (!isValidPassword(formData.password)) {
+      setError("Password is not valid. Please try again.");
+      return;
+    }
     setIsLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
@@ -86,10 +86,10 @@ function UserSignUp() {
       setError(getErrorMessage(err.message));
       console.error(err.message);
     }
-    console.log(auth.currentUser.email);
+    // console.log(auth.currentUser.email);
   };
 
-  function getErrorMessage(error) {
+  const getErrorMessage = (error) => {
     if (error.includes("email-already-in-use")) {
       return "The email address is already in use by another account.";
     } else if (error.includes("user-not-found")) {
@@ -101,7 +101,15 @@ function UserSignUp() {
     } else {
       return "An error occurred. Please try again later.";
     }
-  }
+  };
+
+  const handleBlur = (e) => {
+    if (e.relatedTarget === showPasswordRef.current) {
+      document.getElementById("pass").focus();
+      return;
+    }
+    setTooltipVisible(false);
+  };
 
   return (
     <div className="container">
@@ -116,7 +124,6 @@ function UserSignUp() {
         />
         <div className="password-input">
           <input
-            ref={passwordRef}
             name="password"
             className="input-form"
             placeholder="Enter password"
@@ -124,28 +131,69 @@ function UserSignUp() {
             value={formData.password}
             onChange={handleInput}
             onFocus={() => setTooltipVisible(true)}
-            onBlur={() => setTooltipVisible(false)}
+            onBlur={handleBlur}
+            id="pass"
           />
 
           <i
             className="show-password-button"
             onClick={togglePasswordVisibility}
+            ref={showPasswordRef}
+            id="eyeIcon"
+            tabIndex={0}
           >
             {passwordVisible ? <BsEyeSlashFill /> : <BsEyeFill />}
           </i>
         </div>
         {tooltipVisible && (
-          <div
-            className={`password-tooltip. ${
-              validPassword ? "valid" : "invalid"
-            }`}
-          >
+          <div className="password-tooltip">
             <p>Password must contain:</p>
             <ul>
-              <li>At least 8 characters</li>
-              <li>At least 1 uppercase letter</li>
-              <li>At least 1 lowercase letter</li>
-              <li>At least 1 number</li>
+              <li
+                className={`requirement ${
+                  checkPasswordRequirements(formData.password)[0]
+                    ? "requirementMet"
+                    : "requirementNotMet"
+                }`}
+              >
+                At least 8 characters
+              </li>
+              <li
+                className={`requirement ${
+                  checkPasswordRequirements(formData.password)[1]
+                    ? "requirementMet"
+                    : "requirementNotMet"
+                }`}
+              >
+                At least 1 uppercase letter
+              </li>
+              <li
+                className={`requirement ${
+                  checkPasswordRequirements(formData.password)[2]
+                    ? "requirementMet"
+                    : "requirementNotMet"
+                }`}
+              >
+                At least 1 lowercase letter
+              </li>
+              <li
+                className={`requirement ${
+                  checkPasswordRequirements(formData.password)[3]
+                    ? "requirementMet"
+                    : "requirementNotMet"
+                }`}
+              >
+                At least 1 number
+              </li>
+              <li
+                className={`requirement ${
+                  checkPasswordRequirements(formData.password)[4]
+                    ? "requirementMet"
+                    : "requirementNotMet"
+                }`}
+              >
+                At least 1 special character
+              </li>
             </ul>
           </div>
         )}

@@ -80,7 +80,6 @@ function UserSignIn() {
     <div className="container">
       <form className="form-item" onSubmit={handleSubmit}>
         <input
-          whileHover={{ scale: 1.011 }}
           name="email"
           className="input-form"
           placeholder="Enter email"

@@ -36,6 +36,7 @@ body {
   }
 }
 .input-form {
+  background-color: white;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -45,14 +46,15 @@ body {
   border-radius: 8px;
 }
 
-.input-form:focus, .input-form:active,.input-form:hover {
+.input-form:focus,
+.input-form:active,
+.input-form:hover {
   border-color: #695d4a;
   outline: none;
-
 }
 
 .account-button {
-  background-color: #7eaa76;  
+  background-color: #7eaa76;
   width: 100%;
   color: white;
   padding: 14px 20px;
@@ -103,14 +105,14 @@ body {
 }
 
 .spinner {
-    width: 30px;
-    height: 30px;
-  }
-  .double-bounce1,
-  .double-bounce2 {
-    width: 80%;
-    height: 80%;
-  }
+  width: 30px;
+  height: 30px;
+}
+.double-bounce1,
+.double-bounce2 {
+  width: 80%;
+  height: 80%;
+}
 
 @-webkit-keyframes sk-bounce {
   0%,
@@ -143,19 +145,17 @@ body {
 }
 
 .password-tooltip {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    background-color: #eee;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  background-color: #eee;
+  padding: 3px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.75);
 }
 
-.password-tooltip.valid {
-    color: green;
+.requirementMet {
+  color: green;
 }
 
-.password-tooltip.invalid {
-    color: red;
+.requirementNotMet {
+  color: red;
 }
+
