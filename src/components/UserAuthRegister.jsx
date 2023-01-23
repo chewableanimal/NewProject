@@ -118,7 +118,6 @@ function UserSignUp() {
           name="email"
           className="input-form"
           placeholder="Enter email"
-          type="email"
           value={formData.email}
           onChange={handleInput}
         />
@@ -133,6 +132,7 @@ function UserSignUp() {
             onFocus={() => setTooltipVisible(true)}
             onBlur={handleBlur}
             id="pass"
+            maxLength={50}
           />
 
           <i
@@ -147,7 +147,7 @@ function UserSignUp() {
         </div>
         {tooltipVisible && (
           <div className="password-tooltip">
-            <p>Password must contain:</p>
+            <p>Password must:</p>
             <ul>
               <li
                 className={`requirement ${
@@ -156,7 +156,7 @@ function UserSignUp() {
                     : "requirementNotMet"
                 }`}
               >
-                At least 8 characters
+                Be between 8 - 50 characters
               </li>
               <li
                 className={`requirement ${
@@ -165,7 +165,7 @@ function UserSignUp() {
                     : "requirementNotMet"
                 }`}
               >
-                At least 1 uppercase letter
+                Contain at least 1 uppercase letter
               </li>
               <li
                 className={`requirement ${
@@ -174,7 +174,7 @@ function UserSignUp() {
                     : "requirementNotMet"
                 }`}
               >
-                At least 1 lowercase letter
+                Contain at least 1 lowercase letter
               </li>
               <li
                 className={`requirement ${
@@ -183,7 +183,7 @@ function UserSignUp() {
                     : "requirementNotMet"
                 }`}
               >
-                At least 1 number
+                Contain at least 1 number
               </li>
               <li
                 className={`requirement ${
@@ -192,12 +192,16 @@ function UserSignUp() {
                     : "requirementNotMet"
                 }`}
               >
-                At least 1 special character
+                Contain at least 1 special character
               </li>
             </ul>
           </div>
         )}
-        <button className="account-button" type="submit" disabled={isLoading}>
+        <button
+          className="account-button"
+          disabled={isLoading}
+          onMouseDown={handleSubmit}
+        >
           {isLoading ? (
             <div className="spinner">
               <div className="double-bounce1"></div>
@@ -209,8 +213,8 @@ function UserSignUp() {
         </button>
         <button
           className="account-button"
-          onClick={handleGoogleLogin}
           disabled={isLoading}
+          onMouseDown={handleGoogleLogin}
         >
           {isLoading ? (
             <div className="spinner">
