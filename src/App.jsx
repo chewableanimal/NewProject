@@ -1,10 +1,8 @@
-import UserSignUp from "./components/UserAuthRegister";
-import UserSignIn from "./components/UserAuthSignIn";
+import AuthPage from "./pages/AuthPage";
 function App() {
   return (
     <div>
-      <UserSignUp/>
-      {/* <UserSignIn/> */}
+      <AuthPage/>
     </div>
 
   );

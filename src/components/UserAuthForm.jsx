@@ -1,21 +1,21 @@
 import { useState, useRef } from "react";
-import "../App.css";
 import { auth } from "../firebaseConfig";
 import {
   signInWithRedirect,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import GoogleButton from "./GoogleSignInButton";
 
-function UserSignUp() {
+function AuthForm(props) {
   const provider = new GoogleAuthProvider();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [validPassword, setValidPassword] = useState(false);
   const showPasswordRef = useRef(null);
 
   const togglePasswordVisibility = (e) => {
@@ -43,9 +43,6 @@ function UserSignUp() {
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(null);
-    if (isValidPassword(e.target.value)) {
-      setValidPassword(true);
-    }
   };
 
   const handleGoogleLogin = async (e) => {
@@ -62,23 +59,26 @@ function UserSignUp() {
     }
   };
 
+  //todo fix error messages for sign in and add routing
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setError("Please enter your email and password");
       return;
     }
-    if (!isValidPassword(formData.password)) {
+    if (props.register && !isValidPassword(formData.password)) {
       setError("Password is not valid. Please try again.");
       return;
     }
     setIsLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      const response = (await props.register)
+        ? createUserWithEmailAndPassword(
+            auth,
+            formData.email,
+            formData.password
+          )
+        : signInWithEmailAndPassword(auth, formData.email, formData.password);
       setIsLoading(false);
       console.log(response.user);
     } catch (err) {
@@ -95,7 +95,9 @@ function UserSignUp() {
     } else if (error.includes("user-not-found")) {
       return "We couldn't find an account with that email.";
     } else if (error.includes("wrong-password")) {
-      return "Invalid password. Please try again.";
+      return props.register
+        ? "Invalid password. Please try again."
+        : "Wrong email or password";
     } else if (error.includes("invalid-email")) {
       return "Please enter a valid email address.";
     } else {
@@ -145,7 +147,7 @@ function UserSignUp() {
             {passwordVisible ? <BsEyeSlashFill /> : <BsEyeFill />}
           </i>
         </div>
-        {tooltipVisible && (
+        {props.register && tooltipVisible && (
           <div className="password-tooltip">
             <p>Password must:</p>
             <ul>
@@ -207,33 +209,22 @@ function UserSignUp() {
               <div className="double-bounce1"></div>
               <div className="double-bounce2"></div>
             </div>
-          ) : (
+          ) : props.register ? (
             "Sign Up"
-          )}
-        </button>
-        <button
-          className="account-button"
-          disabled={isLoading}
-          onMouseDown={handleGoogleLogin}
-        >
-          {isLoading ? (
-            <div className="spinner">
-              <div className="double-bounce1"></div>
-              <div className="double-bounce2"></div>
-            </div>
           ) : (
-            "Continue With Google"
+            "Sign In"
           )}
         </button>
+        <span className="or-text">OR</span>
+        <GoogleButton
+          isLoading={isLoading}
+          handleGoogleLogin={handleGoogleLogin}
+        />
         {error && <p className="error">{error}</p>}
-        <p style={{ color: "#f7f7f7" }}>
-          {" "}
-          The email address is alopooøøssssasasssssssready in use by another
-          account.
-        </p>
+        <p style={{ color: "#f7f7f7", width: "50vw" }}> </p>
       </form>
     </div>
   );
 }
 
-export default UserSignUp;
+export default AuthForm;

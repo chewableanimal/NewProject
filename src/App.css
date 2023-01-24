@@ -159,3 +159,18 @@ body {
   color: red;
 }
 
+/* .or-text {
+  font-size: 1.2rem;
+  font-weight: bold; 
+  padding: 0 8px;
+  color: #5c5140;
+} */
+
+.or-text {
+color: #5c5140;
+font-size: 20px;
+margin: 0 10px;
+text-align: center;
+padding: 15px;
+font-weight: bolder;
+}
