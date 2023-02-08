@@ -72,13 +72,17 @@ function AuthForm(props) {
     }
     setIsLoading(true);
     try {
-      const response = (await props.register)
-        ? createUserWithEmailAndPassword(
+      const response = props.register
+        ? await createUserWithEmailAndPassword(
             auth,
             formData.email,
             formData.password
           )
-        : signInWithEmailAndPassword(auth, formData.email, formData.password);
+        : await signInWithEmailAndPassword(
+            auth,
+            formData.email,
+            formData.password
+          );
       setIsLoading(false);
       console.log(response.user);
     } catch (err) {
@@ -95,9 +99,7 @@ function AuthForm(props) {
     } else if (error.includes("user-not-found")) {
       return "We couldn't find an account with that email.";
     } else if (error.includes("wrong-password")) {
-      return props.register
-        ? "Invalid password. Please try again."
-        : "Wrong email or password";
+      return "Email and password do not match.";
     } else if (error.includes("invalid-email")) {
       return "Please enter a valid email address.";
     } else {
