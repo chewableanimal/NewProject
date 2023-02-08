@@ -102,6 +102,10 @@ function AuthForm(props) {
       return "Email and password do not match.";
     } else if (error.includes("invalid-email")) {
       return "Please enter a valid email address.";
+    } else if (error.includes("too-many-requests")) {
+      return "Too many unsuccessful login attempts. Please try again later.";
+    } else if (error.includes("user-disabled")) {
+      return "User account has been disabled.";
     } else {
       return "An error occurred. Please try again later.";
     }
