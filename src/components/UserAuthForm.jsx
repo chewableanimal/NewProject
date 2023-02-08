@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { auth } from "../firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import {
   signInWithRedirect,
   GoogleAuthProvider,
