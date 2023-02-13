@@ -1,8 +1,8 @@
 import AuthForm from "../components/UserAuthForm"
 
-function AuthPage() {
+function AuthPage(props) {
   return (
-    <AuthForm register={false} />
+    <AuthForm register={props.register} />
   )
 }
 

@@ -174,3 +174,13 @@ text-align: center;
 padding: 15px;
 font-weight: bolder;
 }
+
+.link-text {
+  color: #807057;
+
+  text-decoration: underline;
+}
+
+.link-text:hover {
+  color: #5c5140;
+}

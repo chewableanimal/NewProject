@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import GoogleButton from "./GoogleSignInButton";
+import { Link } from "react-router-dom";
 
 function AuthForm(props) {
   const provider = new GoogleAuthProvider();
@@ -17,6 +18,7 @@ function AuthForm(props) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const showPasswordRef = useRef(null);
+  const linkRef = useRef(null);
 
   const togglePasswordVisibility = (e) => {
     e.preventDefault();
@@ -59,7 +61,6 @@ function AuthForm(props) {
     }
   };
 
-  //todo fix error messages for sign in and add routing
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -96,10 +97,11 @@ function AuthForm(props) {
   const getErrorMessage = (error) => {
     if (error.includes("email-already-in-use")) {
       return "The email address is already in use by another account.";
-    } else if (error.includes("user-not-found")) {
-      return "We couldn't find an account with that email.";
-    } else if (error.includes("wrong-password")) {
-      return "Email and password do not match.";
+    } else if (
+      error.includes("user-not-found") ||
+      error.includes("wrong-password")
+    ) {
+      return "Incorrect username or password. Please try again.";
     } else if (error.includes("invalid-email")) {
       return "Please enter a valid email address.";
     } else if (error.includes("too-many-requests")) {
@@ -112,7 +114,10 @@ function AuthForm(props) {
   };
 
   const handleBlur = (e) => {
-    if (e.relatedTarget === showPasswordRef.current) {
+    if (
+      e.relatedTarget === showPasswordRef.current ||
+      e.relatedTarget === linkRef.current
+    ) {
       document.getElementById("pass").focus();
       return;
     }
@@ -221,6 +226,26 @@ function AuthForm(props) {
             "Sign In"
           )}
         </button>
+        {props.register ? (
+          <div>
+            <span>
+              Already have an account?{" "}
+              <Link to="/" ref={linkRef} className="link-text">
+                Sign In
+              </Link>
+            </span>
+          </div>
+        ) : (
+          <div>
+            <span>
+              Don't have an account?{" "}
+              <Link to="/register" ref={linkRef} className="link-text">
+                Create One
+              </Link>
+            </span>
+          </div>
+        )}
+
         <span className="or-text">OR</span>
         <GoogleButton
           isLoading={isLoading}
