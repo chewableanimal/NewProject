@@ -5,10 +5,11 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import GoogleButton from "./GoogleSignInButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AuthForm(props) {
   const provider = new GoogleAuthProvider();
@@ -19,6 +20,7 @@ function AuthForm(props) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const showPasswordRef = useRef(null);
   const linkRef = useRef(null);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = (e) => {
     e.preventDefault();
@@ -51,9 +53,10 @@ function AuthForm(props) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await signInWithRedirect(auth, provider);
+      const response = await signInWithPopup(auth, provider);
       setIsLoading(false);
       console.log(response.user);
+      navigate("/Dashboard");
     } catch (err) {
       setIsLoading(false);
       setError(getErrorMessage(err.message));
@@ -86,6 +89,7 @@ function AuthForm(props) {
           );
       setIsLoading(false);
       console.log(response.user);
+      navigate("/Dashboard");
     } catch (err) {
       setIsLoading(false);
       setError(getErrorMessage(err.message));
@@ -237,7 +241,7 @@ function AuthForm(props) {
           </div>
         ) : (
           <div>
-            <span>
+            <span style={{ color: "#181511" }}>
               Don't have an account?{" "}
               <Link to="/register" ref={linkRef} className="link-text">
                 Create One
