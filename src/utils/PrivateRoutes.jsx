@@ -3,11 +3,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 function PrivateRoutes() {
-  const [currentUser, setCurrentUser] = useState(null);
   const auth = getAuth();
+  const [currentUser, setCurrentUser] = useState(auth.currentUser);
+  // onAuthStateChanged(auth, (user) => {
+  //   setCurrentUser(user);
+  //   console.log(currentUser);
+  // });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth,(user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       console.log(currentUser);
     });
@@ -17,8 +21,7 @@ function PrivateRoutes() {
     };
   }, []);
 
-  console.log(currentUser);
-
+  
   return currentUser ? <Outlet /> : <Navigate to="/" />;
 }
 
