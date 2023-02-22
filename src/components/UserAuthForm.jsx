@@ -255,7 +255,7 @@ function AuthForm(props) {
           handleGoogleLogin={handleGoogleLogin}
         />
         {error && <p className="error">{error}</p>}
-        <p style={{ color: "#f7f7f7", width: "50vw" }}> </p>
+        <p style={{ color: "#f7f7f7", width: "45vw" }}> </p>
       </form>
     </div>
   );
