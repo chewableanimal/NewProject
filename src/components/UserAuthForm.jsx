@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
+
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import GoogleButton from "./GoogleSignInButton";
 import { Link, useNavigate } from "react-router-dom";
@@ -86,6 +88,20 @@ function AuthForm(props) {
             formData.email,
             formData.password
           );
+      if (props.register) {
+        const usersCollection = collection(db, "users");
+        const userDoc = doc(usersCollection, response.user.uid);
+        try {
+          const docRef = await setDoc(userDoc, {
+            name: "Me",
+            email: formData.email,
+            uid: response.user.uid,
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      }
       setIsLoading(false);
       console.log(response.user);
       navigate("/Dashboard");
