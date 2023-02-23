@@ -90,14 +90,14 @@ function AuthForm(props) {
           );
       if (props.register) {
         const usersCollection = collection(db, "users");
-        const userDoc = doc(usersCollection, response.user.uid);
+        const userDocRef = doc(usersCollection, response.user.uid);
         try {
-          const docRef = await setDoc(userDoc, {
+          await setDoc(userDocRef, {
             name: "Me",
             email: formData.email,
             uid: response.user.uid,
           });
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Document written with ID: ", userDocRef.id);
         } catch (e) {
           console.error("Error adding document: ", e);
         }
