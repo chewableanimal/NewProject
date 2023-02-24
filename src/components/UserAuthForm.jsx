@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import GoogleButton from "./GoogleSignInButton";
@@ -14,7 +14,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 function AuthForm(props) {
   const provider = new GoogleAuthProvider();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -57,6 +62,22 @@ function AuthForm(props) {
       const response = await signInWithPopup(auth, provider);
       setIsLoading(false);
       console.log(response.user);
+
+      // Check if the user already exists in Firestore
+      const usersCollection = collection(db, "users");
+      const userDoc = doc(usersCollection, response.user.uid);
+      const userDocSnapshot = await getDoc(userDoc);
+
+      if (!userDocSnapshot.exists()) {
+        // User does not exist, so add them to Firestore
+        await setDoc(userDoc, {
+          name: response.user.displayName,
+          email: response.user.email,
+          uid: response.user.uid,
+        });
+        console.log("New user added to Firestore with ID: ", userDoc.id);
+      }
+
       navigate("/Dashboard");
     } catch (err) {
       setIsLoading(false);
@@ -93,7 +114,8 @@ function AuthForm(props) {
         const userDocRef = doc(usersCollection, response.user.uid);
         try {
           await setDoc(userDocRef, {
-            name: "Me",
+            firstName: formData.firstName,
+            lastName: formData.lastName,
             email: formData.email,
             uid: response.user.uid,
           });
@@ -146,6 +168,24 @@ function AuthForm(props) {
   return (
     <div className="container">
       <form className="form-item" onSubmit={handleSubmit}>
+        {props.register && (
+          <div className="name-input-layout">
+            <input
+              name="firstName"
+              className="input-form name-input"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleInput}
+            />
+            <input
+              name="lastName"
+              className="input-form name-input"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleInput}
+            />
+          </div>
+        )}
         <input
           name="email"
           className="input-form"

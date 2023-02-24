@@ -46,6 +46,16 @@ body {
   border-radius: 8px;
 }
 
+.name-input {
+  width: 40%;
+}
+
+.name-input-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .input-form:focus,
 .input-form:active,
 .input-form:hover {
@@ -137,6 +147,7 @@ body {
 
 .container {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
 }
 .form-item {
@@ -159,12 +170,12 @@ body {
 }
 
 .or-text {
-color: #5c5140;
-font-size: 20px;
-margin: 0 10px;
-text-align: center;
-padding: 15px;
-font-weight: bolder;
+  color: #5c5140;
+  font-size: 20px;
+  margin: 0 10px;
+  text-align: center;
+  padding: 15px;
+  font-weight: bolder;
 }
 
 .link-text {

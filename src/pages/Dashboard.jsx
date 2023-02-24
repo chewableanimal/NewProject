@@ -10,7 +10,7 @@ function Dashboard() {
     const userSnapshot = await getDoc(userDoc);
     if (userSnapshot.exists()) {
       const userData = userSnapshot.data();
-      return userData.name;
+      return userData.firstName;
     } else {
       throw new Error("User document does not exist");
     }
